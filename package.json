@@ -1,0 +1,39 @@
+{
+  "name": "leaflet-freeze",
+  "version": "1.0.0",
+  "description": "Plugin for leaflet that freeze and thaw the leaflet map and all layers/objects on it",
+  "main": "dist/leaflet-freeze.min.js",
+  "author": "Niels Holt",
+  "license": "MIT",
+  "dependencies": {
+    "leaflet": "^0.7.3"
+  },
+  "devDependencies": {
+    "jshint": "latest",
+    "uglifyjs": "latest"
+  },
+  "jshintConfig": {
+    "globals": {
+      "L": false,
+      "$": false,
+      "console": false,
+      "DEBUG": false,
+			"document": false
+    },
+    "undef": true,
+    "unused": true
+  },
+  "scripts": {
+    "lint": "jshint src/leaflet-freeze.js",
+    "build": "uglifyjs src/leaflet-freeze.js -o dist/leaflet-freeze.min.js",
+    "prebuild": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NielsHolt/leaflet-freeze.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NielsHolt/leaflet-freeze/issues"
+  },
+  "homepage": "https://github.com/NielsHolt/leaflet-freeze"
+}

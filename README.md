@@ -16,3 +16,13 @@ Plugin for leaflet that freeze and thaw the leaflet map and all layers/objects o
 
 `afterThaw` (function) Called after the map is 'thawed'
 
+## Installing
+### bower
+`bower install https://github.com/NielsHolt/leaflet-freeze.git --save`
+
+
+
+## License
+This plugin is licensed under the [MIT license](https://github.com/NielsHolt/leaflet-freeze/LICENSE).
+
+Copyright (c) 2014 [Niels Holt](https://github.com/NielsHolt)

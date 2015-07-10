@@ -16,9 +16,23 @@ options:
 	afterThaw		: function(map, options) (optional) to be called after the thawing
 ****************************************************************************/
 
-
-(function (window, document, undefined) {
+(function (L, window, document, undefined) {
 	"use strict";
+
+	var mapIsFrozen = false;
+	
+	//Replace some common functions called by mouse-events
+	var createAlteredFunction = function( originalFunc ){
+		return function( e ){
+			if (mapIsFrozen){ return false; }
+			originalFunc.call(this, e);
+		};
+	};
+
+	L.Marker.prototype._bringToFront = createAlteredFunction( L.Marker.prototype._bringToFront );
+	L.Marker.prototype._resetZIndex = createAlteredFunction( L.Marker.prototype._resetZIndex );
+	L.Marker.prototype._onMouseClick = createAlteredFunction( L.Marker.prototype._onMouseClick );
+	L.Marker.prototype._onKeyPress  = createAlteredFunction( L.Marker.prototype._onKeyPress  );
 
 	L.Map.include({
 		/*********************************************
@@ -42,11 +56,13 @@ options:
 				this.zoomControl.removeFrom( this );				  
 			}
 
+			this._freeze(options);
+
+			mapIsFrozen = true;
+			
 			if (options.afterThaw){
 				this.once('afterThaw', options.afterThaw);  
 			}
-			
-			this._freeze(options);
 		},
 
 		/*********************************************
@@ -72,6 +88,8 @@ options:
 
 			L.DomUtil.removeClass(window.document.body, 'map-is-frozen');			
 
+			mapIsFrozen = false;
+
 			this.fire('afterThaw');
 		}
 	
@@ -81,7 +99,7 @@ options:
 		/*
 		_freeze
 		*/
-		_freeze: function( options ){
+		_freeze: function( options ){ 
 			function freezeIHandler( iHandlers ) {
 				for (var i=0; i<iHandlers.length; i++ ){ 
 					var iHandler = iHandlers[i]; 
@@ -96,13 +114,15 @@ options:
 			//Remove class="leaflet-clickable" from the different variations  of 'container'
 			this.clickableElementWhenThaw = this._icon || this._path || this._container;
 			if (this.clickableElementWhenThaw){
+				
+			
 				if ( L.DomUtil.hasClass(this.clickableElementWhenThaw, 'leaflet-clickable') ){
 					L.DomUtil.removeClass(this.clickableElementWhenThaw, 'leaflet-clickable');
 				} else {
 					this.clickableElementWhenThaw = null;
 				}					  
 			}					  
-			
+
 			//Disable the different iHandlers
 			freezeIHandler( [this.keyboard, this.tap]);
 			if (!options.allowZoom){
@@ -170,7 +190,7 @@ options:
 		Internal new version of hasEventListeners filtering the type of events. 
 		Always allow 'contextmenu' because it is catched by _fireEventWhenDisabled  
 		*/
-		_hasEventListenersWhenDisabled: function( type ){
+		_hasEventListenersWhenDisabled: function( type ){ 
 			if ((type!='contextmenu') && this.disabledEvents && this.disabledEvents[type])
 				return false;	  
 			return L.Mixin.Events.hasEventListeners.call( this, type );
@@ -191,4 +211,4 @@ options:
 		}
 	});
 
-}(this, document));
+})(L, this, document);

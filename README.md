@@ -26,10 +26,10 @@ will reset the map and the layers/objects
 ### options
 | Id | Type | Default | Description |
 | :--: | :--: | :-----: | --- |
-| `allowZoom` | boolean | false | Allows zooming on the map
+| `allowZoom` | boolean | false | Allows zooming on the map. If false the zoom-control is hidden
 | `allowPan` | boolean | false | Allows panning on the map
 | `allowClick` | boolean | false | Allows click on the map (but not on the layers)
-| `hideControls` | boolean | true | Hide all controls |
+| `hideControls` | boolean | true | Hide all controls incl. zoom-control even if `options.allowZoom == true`|
 | `hidePopups` | boolean | true | Close all open popups |
 | `beforeFreeze` | function| null | Called before the map is 'freezed'
 | `afterThaw` | function| null | Called after the map is 'thawed'

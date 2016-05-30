@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="da" style="font-size: 100%">
+<head>
+	<title>fcoo.dk - leaflet-freeze - Demo</title>
+	<meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv='x-dns-prefetch-control' content='on'>
+
+	<meta name='copyright' content='FCOO'>
+	<meta name='owner' content='FCOO'>
+
+  <link  href="bower_components.css" rel="stylesheet">	
+  <link  href="../src/leaflet-freeze.css" rel="stylesheet">	
+</head>
+
+<body>
+	<div id="map" style="width: 500px; height: 300px"></div>
+	<button onClick="if (!L.DomUtil.hasClass(window.document.body, 'map-is-frozen')) map.freeze()">Freeze</button>
+	<button onClick="if (L.DomUtil.hasClass(window.document.body, 'map-is-frozen')) map.thaw()">Thaw</button>
+	<button onClick="map.setZoom(3)">Zoom</button>
+
+	
+	
+	<script src="bower_components.js"></script>
+	<script src="../src/leaflet-freeze.js"></script>
+	<script>
+		L.Icon.Default.imagePath = "\images";
+
+		var map = L.map('map', {zoomControl: false}).setView([56.2, 11.5], 6);
+		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+		L.marker([56.2, 11.5]).addTo(map)
+			.bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
+
+
+	</script>
+</body>
+</html>

@@ -1,28 +1,46 @@
 # leaflet-freeze
-Plugin for leaflet that freeze and thaw the leaflet map and all layers/objects on it
-## Usage
-```map.freeze( [options] )``` will prevent popup, contextmenu, click (optional), pan (optional) and zoom (optional) on the map and prevent popup, contextmenu, mouseover, mouseout, and dragging on the layers/objects on the map
+>
 
-```map.thaw();``` will reset the map and the layers/objects
+
+## Description
+Plugin for leaflet that freeze and thaw the leaflet map and all layers/objects on it
+
+## Installation
+### bower
+`bower install https://github.com/FCOO/leaflet-freeze.git --save`
+
+## Demo
+http://FCOO.github.io/leaflet-freeze/demo/ 
+
+## Usage
+
+	map.freeze( [options] )
+will prevent popup, contextmenu, click (optional), pan (optional) and zoom (optional) on the map and prevent popup, contextmenu, mouseover, mouseout, and dragging on the layers/objects on the map
+
+
+	map.thaw();
+will reset the map and the layers/objects
+
+
 
 ### options
-`allowZoom` (boolean) Allows zooming on the map
-
-`allowPan` (boolean) Allows panning on the map
-
-`allowClick` (boolean) Allows click on the map (but not on the layers)
-
-`beforeFreeze` (function) Called before the map is 'freezed'
-
-`afterThaw` (function) Called after the map is 'thawed'
-
-## Installing
-### bower
-`bower install https://github.com/NielsHolt/leaflet-freeze.git --save`
+| Id | Type | Default | Description |
+| :--: | :--: | :-----: | --- |
+| `allowZoom` | boolean | false | Allows zooming on the map
+| `allowPan` | boolean | false | Allows panning on the map
+| `allowClick` | boolean | false | Allows click on the map (but not on the layers)
+| `hideControls` | boolean | true | Hide all controls |
+| `hidePopups` | boolean | true | Close all open popups |
+| `beforeFreeze` | function| null | Called before the map is 'freezed'
+| `afterThaw` | function| null | Called after the map is 'thawed'
 
 
+## Copyright and License
+This plugin is licensed under the [MIT license](https://github.com/FCOO/leaflet-freeze/LICENSE).
 
-## License
-This plugin is licensed under the [MIT license](https://github.com/NielsHolt/leaflet-freeze/LICENSE).
+Copyright (c) 2015 [FCOO](https://github.com/FCOO)
 
-Copyright (c) 2014 [Niels Holt](https://github.com/NielsHolt)
+## Contact information
+
+[Niels Holt](http://github.com/NielsHolt)
+

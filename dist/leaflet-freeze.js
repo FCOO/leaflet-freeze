@@ -14,25 +14,24 @@ When the map is 'frozen' the <body>-element get a classname 'map-is-frozen'
 map.thaw() will undo the locking done by map.freeze(..)
 
 options:
-	allowZoom		: boolean. If true zoom is allowed
-	allowPan  	: boolean. If true pan is allowed
-	allowClick	: boolean. If true click (on the map) is allowed
-	beforeFreeze: function(map, options) (optional) to be called before the freezing
-	afterThaw		: function(map, options) (optional) to be called after the thawing
+	allowZoomAndPan	: boolean. If true zoom and pan is allowed
+	allowClick			: boolean. If true click (on the map) is allowed
+	beforeFreeze		: function(map, options) (optional) to be called before the freezing
+	afterThaw				: function(map, options) (optional) to be called after the thawing
 ****************************************************************************/
 
 (function (L, window, document, undefined) {
 	"use strict";
 
 	var defaultOptions = {
-				allowZoom		: false,
-				allowPan  	: false,
-				allowClick	: false,
-				hideControls: true,
-				hidePopups	: true,
-				beforeFreeze: null,
-				afterThaw		: null
+				allowZoomANdPan	: false,
+				allowClick			: false,
+				hideControls		: true,
+				hidePopups			: true,
+				beforeFreeze		: null,
+				afterThaw				: null
 			};
+
 
 	//Replace some common functions called by mouse-events
 	var createAlteredFunction = function( originalFunc ){
@@ -60,6 +59,7 @@ options:
 			L.DomUtil.addClass(window.document.body, 'map-is-frozen');
 
 			options = L.Util.extend( {}, defaultOptions, options );
+			options.preventZoomAndPan = !options.allowZoomAndPan; //Typo pretty
 
 			if (options.beforeFreeze)
 				options.beforeFreeze(this, options);
@@ -69,24 +69,13 @@ options:
 
 			//Remove the cursor.grab if pan is frozen
 			this._freezeOptions.map_cursor_style = this.getContainer().style.cursor;
-			if (!options.allowPan)
+			if (options.preventZoomAndPan)
 				this.getContainer().style.cursor = 'default';
 
 			//Block for zoom and remove the zoom-control if zoom isn't allowed
-			if (!options.allowZoom){
-				this._freezeOptions.getMinZoom	= this.getMinZoom;
-				this._freezeOptions.getMaxZoom	= this.getMaxZoom;
-				this._freezeOptions.setZoom			= this.setZoom;
-
-				this.getMinZoom = function(){ return this.getZoom(); };
-				this.getMaxZoom = this.getMinZoom;
-				this.setZoom = function(){ return this; };
-
-				if (this.zoomControl){
-				  this._freezeOptions.zoomControl_style_display = this.zoomControl._container.style.display;
-				  this.zoomControl._container.style.display = 'none';
-				}
-
+			if (options.preventZoomAndPan && this.zoomControl){
+			  this._freezeOptions.zoomControl_style_display = this.zoomControl._container.style.display;
+			  this.zoomControl._container.style.display = 'none';
 			}
 
 			//Hide all controls
@@ -115,20 +104,14 @@ options:
 				this.getContainer().style.cursor = this._freezeOptions.map_cursor_style;
 
 			//Reset zoom
-			if (!this._freezeOptions.options.allowZoom){
-				this.getMinZoom = this._freezeOptions.getMinZoom;
-				this.getMaxZoom = this._freezeOptions.getMaxZoom;
-				this.setZoom		= this._freezeOptions.setZoom;
+			if (this._freezeOptions.options.preventZoomAndPan && this.zoomControl)
+			  this.zoomControl._container.style.display = this._freezeOptions.zoomControl_style_display;
 
-				if (this.zoomControl)
-				  this.zoomControl._container.style.display = this._freezeOptions.zoomControl_style_display;
-			}
-
+			//Show controls
 			if (this._freezeOptions.options.hideControls)
 			  this._controlContainer.style.display = this._freezeOptions._controlContainer_style_display;
 
-
-			//Enable all events
+			//Enable all handles and events
 			this._thaw();
 
 			L.DomUtil.removeClass(window.document.body, 'map-is-frozen');
@@ -145,17 +128,6 @@ options:
 		_freeze
 		*/
 		_freeze: function( options ){
-			function freezeIHandler( iHandlers ) {
-				for (var i=0; i<iHandlers.length; i++ ){
-					var iHandler = iHandlers[i];
-					if (iHandler){
-						iHandler.enableOnThaw = iHandler._enabled || (iHandler.enabled && iHandler.enabled());
-						iHandler.disable();
-						iHandler.frozen = true;
-					}
-				}
-			}
-
 			this._freezeOptions = this._freezeOptions || {};
 
 			//Remove class="leaflet-clickable" from the different variations  of 'container'
@@ -166,12 +138,16 @@ options:
 				this._freezeOptions.clickableElement = null;
 
 			//Disable the different iHandlers
-			freezeIHandler( [/*this.keyboard, */this.tap]);
-			if (!options.allowZoom){
-				freezeIHandler( [this.touchZoom, this.doubleClickZoom, this.scrollWheelZoom, this.boxZoom]);
-			}
-			if (!options.allowPan){
-				freezeIHandler( [this.dragging]);
+			if (options.preventZoomAndPan){
+				var iHandlers = [this.keyboard, this.dragging, this.tap, this.touchZoom, this.doubleClickZoom, this.scrollWheelZoom, this.boxZoom];
+				for (var i=0; i<iHandlers.length; i++ ){
+					var iHandler = iHandlers[i];
+					if (iHandler){
+						iHandler.enableOnThaw = iHandler._enabled || (iHandler.enabled && iHandler.enabled());
+						iHandler.disable();
+						iHandler.frozen = true;
+					}
+				}
 			}
 
 			if (options.hidePopups && this.closePopup){
@@ -179,7 +155,7 @@ options:
 			}
 
 			if (this.hasEventListeners){
-				this.disabledEvents = {click:!options.allowClick, dblclick:true, preclick:true, contextmenu:true, mouseover:true, mouseout:true };
+				this.disabledEvents = {click:!options.allowClick, dblclick:options.preventZoomAndPan, preclick:true, contextmenu:true, mouseover:true, mouseout:true };
 
 				this._save_hasEventListeners = this.hasEventListeners;
 				this.hasEventListeners = this._hasEventListenersWhenDisabled;
@@ -202,7 +178,7 @@ options:
 		*/
 		_thaw: function( ){
 			//Enabled any IHandler, that was disabled
-			var iHandlers = [this.dragging, this.touchZoom, this.doubleClickZoom, this.scrollWheelZoom, this.boxZoom, this.keyboard, this.tap];
+			var iHandlers = [this.keyboard, this.dragging, this.tap, this.touchZoom, this.doubleClickZoom, this.scrollWheelZoom, this.boxZoom];
 			for (var i=0; i<iHandlers.length; i++ ){
 				var iHandler = iHandlers[i];
 				if (iHandler && iHandler.frozen){

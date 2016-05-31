@@ -19,14 +19,62 @@ options:
 	beforeFreeze		: function(map, options) (optional) to be called before the freezing
 	afterThaw				: function(map, options) (optional) to be called after the thawing
 ****************************************************************************/
+/*
+		//Block for zoom and remove the zoom-control if zoom isn't allowed
+			if (!options.allowZoom){
+				this._freezeOptions.getMinZoom	= this.getMinZoom;
+				this._freezeOptions.getMaxZoom	= this.getMaxZoom;
+				this._freezeOptions.setZoom			= this.setZoom;
 
+				this.getMinZoom = function(){ return this.getZoom(); };
+				this.getMaxZoom = this.getMinZoom;
+				this.setZoom = function(){ return this; };
+
+				if (this.zoomControl){
+				  this._freezeOptions.zoomControl_style_display = this.zoomControl._container.style.display;
+				  this.zoomControl._container.style.display = 'none';
+				}
+
+			}
+
+			//Hide all controls
+			if (options.hideControls){
+			  this._freezeOptions._controlContainer_style_display = this._controlContainer.style.display;
+			  this._controlContainer.style.display = 'none';
+			}
+
+			this._freeze(options);
+
+			this._isFrozen = true;
+
+			if (options.afterThaw){
+				this.once('afterThaw', options.afterThaw);
+			}
+		},
+
+		thaw: function(){
+			if (!this._isFrozen)
+			  return;
+
+			//Reset cursor
+				this.getContainer().style.cursor = this._freezeOptions.map_cursor_style;
+
+			//Reset zoom
+			if (!this._freezeOptions.options.allowZoom){
+				this.getMinZoom = this._freezeOptions.getMinZoom;
+				this.getMaxZoom = this._freezeOptions.getMaxZoom;
+				this.setZoom		= this._freezeOptions.setZoom;
+
+
+
+*/
 (function (L, window, document, undefined) {
 	"use strict";
 
 	var defaultOptions = {
-				allowZoomANdPan	: false,
+				allowZoomAndPan	: false,
 				allowClick			: false,
-				hideControls		: true,
+				hideControls		: false,
 				hidePopups			: true,
 				beforeFreeze		: null,
 				afterThaw				: null
@@ -73,9 +121,20 @@ options:
 				this.getContainer().style.cursor = 'default';
 
 			//Block for zoom and remove the zoom-control if zoom isn't allowed
-			if (options.preventZoomAndPan && this.zoomControl){
-			  this._freezeOptions.zoomControl_style_display = this.zoomControl._container.style.display;
-			  this.zoomControl._container.style.display = 'none';
+			if (options.preventZoomAndPan){
+				this._freezeOptions.getMinZoom	= this.getMinZoom;
+				this.getMinZoom = function(){ return this.getZoom(); };
+
+				this._freezeOptions.getMaxZoom	= this.getMaxZoom;
+				this.getMaxZoom = this.getMinZoom;
+				
+				this._freezeOptions.setZoom			= this.setZoom;
+				this.setZoom = function(){ return this; };				
+				
+				if (this.zoomControl){
+					this._freezeOptions.zoomControl_style_display = this.zoomControl._container.style.display;
+					this.zoomControl._container.style.display = 'none';
+				}
 			}
 
 			//Hide all controls
@@ -104,8 +163,15 @@ options:
 				this.getContainer().style.cursor = this._freezeOptions.map_cursor_style;
 
 			//Reset zoom
-			if (this._freezeOptions.options.preventZoomAndPan && this.zoomControl)
-			  this.zoomControl._container.style.display = this._freezeOptions.zoomControl_style_display;
+			if (this._freezeOptions.options.preventZoomAndPan){
+				
+				this.getMinZoom = this._freezeOptions.getMinZoom;
+				this.getMaxZoom = this._freezeOptions.getMaxZoom;
+				this.setZoom		= this._freezeOptions.setZoom;
+				
+				if (this.zoomControl)
+					this.zoomControl._container.style.display = this._freezeOptions.zoomControl_style_display;
+			}
 
 			//Show controls
 			if (this._freezeOptions.options.hideControls)

@@ -15,7 +15,7 @@ http://FCOO.github.io/leaflet-freeze/demo/
 ## Usage
 
 	map.freeze( [options] )
-will prevent popup, contextmenu, click (optional), pan (optional) and zoom (optional) on the map and prevent popup, contextmenu, mouseover, mouseout, and dragging on the layers/objects on the map
+will prevent popup, contextmenu, click (optional), pan and zoom (optional) on the map and prevent popup, contextmenu, mouseover, mouseout, and dragging on the layers/objects on the map
 
 
 	map.thaw();

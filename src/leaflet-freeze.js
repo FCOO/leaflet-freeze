@@ -127,10 +127,10 @@ options:
 
 				this._freezeOptions.getMaxZoom	= this.getMaxZoom;
 				this.getMaxZoom = this.getMinZoom;
-				
+
 				this._freezeOptions.setZoom			= this.setZoom;
-				this.setZoom = function(){ return this; };				
-				
+				this.setZoom = function(){ return this; };
+
 				if (this.zoomControl){
 					this._freezeOptions.zoomControl_style_display = this.zoomControl._container.style.display;
 					this.zoomControl._container.style.display = 'none';
@@ -164,11 +164,11 @@ options:
 
 			//Reset zoom
 			if (this._freezeOptions.options.preventZoomAndPan){
-				
+
 				this.getMinZoom = this._freezeOptions.getMinZoom;
 				this.getMaxZoom = this._freezeOptions.getMaxZoom;
 				this.setZoom		= this._freezeOptions.setZoom;
-				
+
 				if (this.zoomControl)
 					this.zoomControl._container.style.display = this._freezeOptions.zoomControl_style_display;
 			}
@@ -279,6 +279,8 @@ options:
 		_hasEventListenersWhenDisabled: function( type ){
 			if ((type!='contextmenu') && this.disabledEvents && this.disabledEvents[type])
 				return false;
+console.log('her', type, this.disabledEvents[type]);
+
 			return L.Mixin.Events.hasEventListeners.call( this, type );
 		},
 

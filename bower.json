@@ -1,14 +1,13 @@
 {
   "name": "leaflet-freeze",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "homepage": "https://github.com/FCOO/leaflet-freeze",
   "authors": [
     "NielsHolt"
   ],
   "description": "Plugin for leaflet that freeze and thaw the leaflet map and all layers/objects on it",
   "main": [
-    "dist/leaflet-freeze.js",
-    "dist/leaflet-freeze.css"
+    "dist/leaflet-freeze.js"
   ],
   "repository": {
     "type": "git",

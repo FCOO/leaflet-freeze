@@ -24,9 +24,9 @@ options:
 	"use strict";
 
 	var defaultOptions = {
-				allowZoomANdPan	: false,
+				allowZoomAndPan	: false,
 				allowClick			: false,
-				hideControls		: true,
+				hideControls		: false,
 				hidePopups			: true,
 				beforeFreeze		: null,
 				afterThaw				: null
@@ -72,7 +72,7 @@ options:
 			if (options.preventZoomAndPan)
 				this.getContainer().style.cursor = 'default';
 
-			//Block for zoom and remove the zoom-control if zoom isn't allowed
+			//Remove the zoom-control if zoom isn't allowed
 			if (options.preventZoomAndPan && this.zoomControl){
 			  this._freezeOptions.zoomControl_style_display = this.zoomControl._container.style.display;
 			  this.zoomControl._container.style.display = 'none';

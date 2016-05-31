@@ -28,7 +28,7 @@ will reset the map and the layers/objects
 | :--: | :--: | :-----: | --- |
 | `allowZoomAndPan` | boolean | false | Allows zooming and panning on the map. If false the zoom-control is hidden
 | `allowClick` | boolean | false | Allows click on the map (but not on the layers) |
-| `hideControls` | boolean | true | Hide all controls incl. zoom-control even if `options.allowZoomAndPan == true`|
+| `hideControls` | boolean | false | Hide all controls incl. zoom-control even if `options.allowZoomAndPan == true`|
 | `hidePopups` | boolean | true | Close all open popups |
 | `beforeFreeze` | function| null | Called before the map is 'freezed'
 | `afterThaw` | function| null | Called after the map is 'thawed'

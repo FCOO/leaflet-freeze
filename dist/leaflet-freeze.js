@@ -279,8 +279,6 @@ options:
 		_hasEventListenersWhenDisabled: function( type ){
 			if ((type!='contextmenu') && this.disabledEvents && this.disabledEvents[type])
 				return false;
-console.log('her', type, this.disabledEvents[type]);
-
 			return L.Mixin.Events.hasEventListeners.call( this, type );
 		},
 

@@ -9,30 +9,86 @@
 	<meta name='copyright' content='FCOO'>
 	<meta name='owner' content='FCOO'>
 
-  <link  href="bower_components.css" rel="stylesheet">	
-  <link  href="../src/leaflet-freeze.css" rel="stylesheet">	
+  <link  href="bower_components.css" rel="stylesheet">
+  <link  href="../src/leaflet-freeze.css" rel="stylesheet">
 </head>
 
 <body>
-	<div id="map" style="width: 500px; height: 300px"></div>
-	<button onClick="map.freeze()">Freeze</button>
+	<script src="bower_components.js"></script>
+	<script src="../src/leaflet-freeze.js"></script>
+
+    <div id="map" style="width: 800px; height: 800px"></div>
+	<button id="freeze">Freeze  all except red polygon</button>
 	<button onClick="map.freeze({allowZoomAndPan:true})">Freeze with zoom and pan</button>
 	<button onClick="map.thaw()">Thaw</button>
 	<button onClick="map.setZoom(3)">Zoom</button>
 
-	
-	
-	<script src="bower_components.js"></script>
-	<script src="../src/leaflet-freeze.js"></script>
+
+
 	<script>
-		L.Icon.Default.imagePath = "\images";
+//HER		L.Icon.Default.imagePath = "\images";
 
-		var map = L.map('map').setView([56.2, 11.5], 6);
-		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-		L.marker([56.2, 11.5]).addTo(map)
-			.bindPopup('A popup that only can be seen when the map is thaw');
+	var map = L.map('map').setView([56.2, 11.5], 6);
+	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+        .on('click', function(){alert('Clisk on layer'); })
+        .addTo(map);
 
-	</script>
+    var marker =
+        L.marker([56.2, 11.5]).addTo(map)
+            .bindTooltip('marker')
+		    .bindPopup('marker - A popup that only can be seen when the map is thaw');
+
+    var polygon =
+        L.polygon([[56.2, 11.5], [56.2+1, 11.5], [56.2, 11.5+1]], {color: 'red'}).addTo(map);
+
+    polygon.on('click', function(){ alert('CLICK'); });
+
+
+
+    var data = {
+        "type": "FeatureCollection",
+        "features": [
+         {
+             "type": "Feature",
+             "geometry": {
+                 "type": "Point",
+                 "coordinates": [9, 54]
+             }
+         },
+         {
+             "type": "Feature",
+             "geometry": {
+                 "type": "LineString",
+                 "coordinates": [
+                     [10, 56.0], [11, 57.0], [10, 58.0], [11, 57]
+                 ]
+             }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [[10, 55], [10, 56], [12, 56],[12, 55]]
+                ]
+            }
+        }
+        ]
+    }
+
+    var geoJSON = L.geoJSON(data,{
+        onEachFeature: function (feature, layer) {
+            layer.bindTooltip('Tooltip geoJSON');
+            layer.bindPopup('popup geoJSON');
+        }
+    }).addTo(map);
+
+    $('#freeze').on('click', function(){
+        map.freeze({dontFreeze: polygon});
+    });
+
+
+    </script>
 </body>
 </html>

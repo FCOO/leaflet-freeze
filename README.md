@@ -21,18 +21,22 @@ will prevent popup, contextmenu, click (optional), pan and zoom (optional) on th
 	map.thaw();
 will reset the map and the layers/objects
 
+### New method
+
+    L.Class.getHtmlElements: function() Return associated html-elements or array of Leaflet-elements
+
 
 
 ### options
 | Id | Type | Default | Description |
 | :--: | :--: | :-----: | --- |
 | `allowZoomAndPan` | boolean | false | Allows zooming and panning on the map. If false the zoom-control is hidden
-| `allowClick` | boolean | false | Allows click on the map (but not on the layers) |
+| `allowClick` | boolean | false | If true click (on the map) is allowed |
 | `hideControls` | boolean | false | Hide all controls incl. zoom-control even if `options.allowZoomAndPan == true`|
 | `hidePopups` | boolean | true | Close all open popups |
-| `beforeFreeze` | function| null | Called before the map is 'freezed'
-| `afterThaw` | function| null | Called after the map is 'thawed'
-
+| `beforeFreeze` | function| null | Called before the map is 'freezed' |
+| `afterThaw` | function| null | Called after the map is 'thawed' |
+| `dontFreeze` |  object or []object | null | leaflet-object, html-element or array of ditto with element or "leaflet-owner" no to be frozen |
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://github.com/FCOO/leaflet-freeze/LICENSE).

@@ -1,0 +1,15 @@
+/***********************************************
+    leaflet-freeze.scss,
+
+    (c) 2016, FCOO
+
+    https://gitlab.com/fcoo/fcoo-leaflet
+    https://gitlab.com/fcoo
+
+
+************************************************/
+.is-frozen .hide-for-is-frozen {
+  display: none !important; }
+
+.no-is-frozen .show-for-is-frozen {
+  display: none !important; }

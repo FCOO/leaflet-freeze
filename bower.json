@@ -1,6 +1,6 @@
 {
   "name": "leaflet-freeze",
-  "version": "1.1.4",
+  "version": "2.0.0",
   "homepage": "https://github.com/FCOO/leaflet-freeze",
   "authors": [
     "NielsHolt"
@@ -14,12 +14,15 @@
     "url": "git://github.com/FCOO/leaflet-freeze.git"
   },
   "dependencies": {
-    "leaflet": "latest"
+    "leaflet": "latest",
+    "jquery": "latest",
+    "modernizr-javascript": "fcoo/modernizr-javascript#^1.1.2"
   },
   "devDependencies": {
     "bourbon": "latest",
     "modernizr-mixin": "latest",
-    "mathsass": "latest"
+    "mathsass": "latest",
+    "modernizr-scss": "FCOO/modernizr-scss#^2.1.2"
   },
   "license": "MIT",
   "ignore": [

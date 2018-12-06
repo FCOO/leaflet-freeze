@@ -15,8 +15,8 @@ When the map is 'thaw' the <map>-element get a classname 'not-is-frozen'
 map.thaw() will undo the locking done by map.freeze(..)
 
 options:
-    allowZoomAndPan: boolean. If true zoom and pan is allowed
-    allowClick     : boolean. If true click (on the map) is allowed
+    allowZoomAndPan: false. If true zoom and pan is allowed
+    disableMapEvents: "". Names of events on the map to be disabled
     hideControls   : false. If true all leaflet-controls are hidden
     hidePopups     : true. If true all open popups are closed on freeze
     beforeFreeze   : function(map, options) (optional) to be called before the freezing
@@ -34,13 +34,13 @@ L.Class.getHtmlElements: function() Return associated html-elements or array of 
 
     var modernizrFreezeTest = 'is-frozen',
         defaultOptions = {
-            allowZoomAndPan: false,
-            allowClick     : false,
-            hideControls   : false,
-            hidePopups     : true,
-            beforeFreeze   : null,
-            afterThaw      : null,
-            dontFreeze     : null
+            allowZoomAndPan : false,
+            disableMapEvents: '',
+            hideControls    : false,
+            hidePopups      : true,
+            beforeFreeze    : null,
+            afterThaw       : null,
+            dontFreeze      : null
         };
 
 
@@ -176,8 +176,13 @@ L.Class.getHtmlElements: function() Return associated html-elements or array of 
             if (options.hidePopups && this.closePopup)
                 this.closePopup();
 
-            if (this.hasEventListeners){
-                this.disabledEvents = {click:!options.allowClick, dblclick:options.preventZoomAndPan, preclick:true, contextmenu:true, mouseover:true, mouseout:true };
+            if (this.hasEventListeners && options.disableMapEvents){
+                this.disabledEvents = {};
+                var _this = this;
+                $.each(options.disableMapEvents.split(' '), function(id, eventName){
+                    if (eventName)
+                        _this.disabledEvents[eventName] = true;
+                });
 
                 this._save_hasEventListeners = this.hasEventListeners;
                 this.hasEventListeners = this._hasEventListenersWhenDisabled;
@@ -188,7 +193,6 @@ L.Class.getHtmlElements: function() Return associated html-elements or array of 
                 this._save_fire = this.fire;
                 this.fire = this._fireEventWhenDisabled;
             }
-
 
             this._isFrozen = true;
 
